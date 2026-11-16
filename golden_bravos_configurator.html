@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Bravos Event Configurator</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome (Free) for Elegant Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+    function timestamp() { 
+        var response = document.getElementById("g-recaptcha-response"); 
+        if (response == null || response.value.trim() == "") {
+            var elems = document.getElementsByName("captcha_settings");
+            if(elems.length > 0) {
+                var settings = JSON.parse(elems[0].value);
+                settings["ts"] = JSON.stringify(new Date().getTime());
+                elems[0].value = JSON.stringify(settings); 
+            }
+        } 
+    } 
+    setInterval(timestamp, 500); 
+    </script>
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --bg-color: #1c1c1c;
+            --surface-color: #242424;
+            --text-main: #f4f4f4;
+            --text-muted: #aaaaaa;
+            --gold: #c5a059;
+            --gold-light: rgba(197, 160, 89, 0.08);
+            --gold-glow: rgba(197, 160, 89, 0.2);
+            --border-color: #3a3a3a;
+            --border-hover: #555555;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Montserrat', sans-serif;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading);
+            font-weight: 400;
+            margin: 0;
+            color: #ffffff;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header-section h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .header-section p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 300;
+            font-style: italic;
+        }
+
+        /* Forms */
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--surface-color);
+            padding: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 1rem;
+            font-family: var(--font-body);
+            border-radius: 2px;
+            box-sizing: border-box;
+            transition: var(--transition);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        /* Buttons */
+        .btn-gold {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--text-main);
+            padding: 14px 35px;
+            font-size: 0.95rem;
+            font-family: var(--font-body);
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            border-radius: 2px;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-gold:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background-color: var(--gold-light);
+        }
+        
+        .btn-solid {
+            background-color: var(--gold);
+            color: #111;
+            border: 1px solid var(--gold);
+            font-weight: 600;
+        }
+
+        .btn-solid:hover {
+            background-color: #d8b46a;
+            color: #111;
+            box-shadow: 0 5px 15px var(--gold-glow);
+        }
+
+        /* Two Column Layout (Step 2) */
+        .configurator-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* Packages */
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        /* Extras Section Header */
+        .extras-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .extras-header h2 {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            font-family: var(--font-heading);
+            color: #ffffff;
+        }
+
+        .extras-header .divider {
+            width: 45px;
+            height: 1px;
+            background-color: #555;
+            margin: 0 auto 20px;
+        }
+
+        .extras-header p {
+            color: var(--text-main);
+            font-size: 1.05rem;
+            max-width: 750px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .package-card {
+            border: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+            padding: 30px 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .package-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .package-card.selected {
+            border-color: var(--gold);
+            background-color: var(--gold-light);
+            box-shadow: 0 8px 25px var(--gold-glow);
+        }
+
+        .package-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+
+        .package-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        .package-card ul li {
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Extras Grid */
+        .extras-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+
+        .extra-item {
+            flex: 1;
+            min-width: 150px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .extra-icon {
+            font-size: 1.8rem;
+            color: #fff;
+            width: 100px;
+            height: 100px;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: var(--transition);
+        }
+
+        .extra-item:hover .extra-icon {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .extra-item.selected .extra-icon {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        
+        .extra-item.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .extra-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-family: var(--font-heading);
+            color: #fff;
+        }
+
+        .extra-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Dynamic Summary (Right Column) */
+        .summary-panel {
+            position: sticky;
+            top: 40px;
+            background-color: var(--surface-color);
+            border: 1px solid var(--gold);
+            padding: 30px;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .summary-panel h2 {
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.3);
+            padding-bottom: 15px;
+        }
+
+        .summary-content {
+            min-height: 200px;
+        }
+
+        .placeholder-text {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .summary-pkg-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .summary-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+        }
+
+        .summary-list li {
+            padding: 8px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .summary-list li::before {
+            content: '✓';
+            color: var(--gold);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .summary-extras-title {
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+            font-family: var(--font-body);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .summary-extra-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .summary-extra-item .icon-wrapper {
+            color: var(--gold);
+            width: 25px;
+            margin-right: 10px;
+            text-align: center;
+            font-size: 1.1rem;
+            display: inline-flex;
+            justify-content: center;
+        }
+
+        .summary-total {
+            margin-top: 30px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-box {
+            background-color: var(--surface-color);
+            border: 1px solid var(--gold);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            border-radius: 4px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .modal-box i.fa-check-circle {
+            font-size: 4rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .modal-box h3 {
+            color: #fff;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-box p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        /* --- NEW STYLES FOR LANDING PAGE AND MAIN MODAL --- */
+        
+        .landing-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+        }
+        
+        .landing-page h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            font-family: var(--font-heading);
+        }
+        
+        .landing-page .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            display: inline-block;
+        }
+
+        .landing-page .description {
+            color: var(--text-main);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            font-weight: 300;
+        }
+
+        .landing-page .tagline {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+        }
+
+        .btn-large {
+            font-size: 1.2rem;
+            padding: 20px 50px;
+            border-radius: 4px;
+        }
+
+        .btn-landing {
+            font-size: 0.95rem;
+            padding: 14px 40px;
+            border-radius: 30px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.2);
+            width: auto;
+        }
+        
+        .btn-landing:hover {
+            box-shadow: 0 6px 25px rgba(197, 160, 89, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .package-card.recommended {
+            border-color: var(--gold);
+        }
+        
+        .recommended-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--gold);
+            color: #111;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-family: var(--font-body);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .main-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 500;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .main-modal-content {
+            background-color: var(--bg-color);
+            width: 100%;
+            max-width: 1350px;
+            max-height: 95vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+            padding: 20px 0;
+        }
+
+        .main-modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .main-modal-content::-webkit-scrollbar-thumb {
+            background-color: var(--gold);
+            border-radius: 4px;
+        }
+
+        .g-recaptcha {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .close-main-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .close-main-modal:hover {
+            color: var(--gold);
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .configurator-layout {
+                grid-template-columns: 1fr;
+            }
+            .summary-panel {
+                position: static;
+                margin-top: 20px;
+            }
+            .header-section h1 {
+                font-size: 2.5rem;
+            }
+            .landing-page h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LANDING PAGE -->
+    <div class="landing-page" style="max-width: 900px; margin: 0 auto; padding: 60px 20px;">
+        <h1>Build your party</h1>
+        <div class="subtitle">Customize Your Event with Golden Bravos!</div>
+        <p class="description">Choose the package that fits your wedding or event, then add the extras you like. From relaxed aperitivo music to a full party with DJ set, you decide the level and we bring the show. Not sure which one is right for you? Tell us about your day and we will suggest the best option.</p>
+        <div class="tagline">Pick, mix, celebrate!</div>
+        <button class="btn-gold btn-solid btn-landing" onclick="openConfigModal()">Start Configuration</button>
+    </div>
+
+    <!-- MAIN CONFIGURATOR MODAL -->
+    <div id="mainConfigModal" class="main-modal-overlay">
+        <div class="main-modal-content">
+            <span class="close-main-modal" onclick="closeConfigModal()">&times;</span>
+
+            <div class="container">
+                
+                <form id="configForm" action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00Dbl000004WsSn" method="POST" onsubmit="return validateAndPrepareSubmit()">
+                    
+                    <!-- Salesforce Hidden Fields (UPDATED with new settings) -->
+                    <input type="hidden" name="captcha_settings" value='{"keyname":"golden_bravos_rec_v2","fallback":"true","orgId":"00Dbl000004WsSn","ts":""}'>
+                    <input type="hidden" name="oid" value="00Dbl000004WsSn">
+                    <input type="hidden" name="retURL" value="https://goldenbravos.com/">
+                    <input type="hidden" id="lead_source" name="lead_source" value="Web Site" />
+                    <textarea id="description" name="description" style="display:none;"></textarea>
+
+                    <div id="step-1" class="form-container" style="margin-top: 40px; margin-bottom: 40px;">
+                        <div class="header-section" style="margin-bottom: 30px;">
+                            <h2>Your Details</h2>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="first_name">First Name *</label>
+                            <input id="first_name" name="first_name" maxlength="40" type="text" required placeholder="Enter your first name" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="last_name">Last Name *</label>
+                            <input id="last_name" name="last_name" maxlength="80" type="text" required placeholder="Enter your last name" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input id="email" name="email" maxlength="80" type="email" required placeholder="your.email@example.com" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input id="phone" name="phone" maxlength="40" type="tel" placeholder="+1 234 567 890" />
+                        </div>
+                        
+                        <button type="button" class="btn-gold" onclick="goToStep2()">Next: Build your event</button>
+                    </div>
+                <!-- Form is kept open to wrap step 2 for Salesforce submission -->
+
+            <!-- STEP 2: CONFIGURATION -->
+            <div id="step-2" class="configurator-layout" style="display: none;">
+                
+                <!-- Left Column: Selection Area -->
+                <div class="selection-area">
+                    
+                    <h2 class="section-title">1. Choose the Package</h2>
+                    <div class="packages-grid">
+                        
+                        <div class="package-card" onclick="selectPackage('Unplugged Roaming')">
+                            <h3>Unplugged Roaming</h3>
+                            <ul>
+                                <li>Aperitivo Background Music</li>
+                                <li>Dinner Background Music</li>
+                                <li>After Dinner Live Show</li>
+                                <li>After Show Background Music</li>
+                                <li>Roaming Acoustic Set</li>
+                                <li>1 Setlist Available</li>
+                                <li>Standard Lights and FX (7 items)</li>
+                            </ul>
+                        </div>
+
+                        <div class="package-card" onclick="selectPackage('Standard')">
+                            <h3>Standard</h3>
+                            <ul>
+                                <li>Aperitivo Background Music</li>
+                                <li>Dinner Background Music</li>
+                                <li>After Dinner Live Show</li>
+                                <li>After Show Background Music</li>
+                                <li>1 Music Stage</li>
+                                <li>1 Setlist Available</li>
+                                <li>Standard Lights and FX (7 items)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="package-card recommended" onclick="selectPackage('Plus')">
+                            <div class="recommended-badge">Recommended</div>
+                            <h3>Plus</h3>
+                            <ul>
+                                <li>Aperitivo Acoustic Show</li>
+                                <li>Dinner Background Music</li>
+                                <li>After Dinner Live Show</li>
+                                <li>After Show Background Music</li>
+                                <li>2 Music Stages</li>
+                                <li>2 Setlists Available</li>
+                                <li>Plus Lights and FX (19 items)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="package-card" onclick="selectPackage('Premium')">
+                            <h3>Premium</h3>
+                            <ul>
+                                <li>Aperitivo Acoustic Show</li>
+                                <li>Dinner Background Music</li>
+                                <li>After Dinner Live Show</li>
+                                <li>DJ Set</li>
+                                <li>2 Music Stages</li>
+                                <li>3 Playlists Available</li>
+                                <li>Premium Lights and FX (31 items)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="extras-header">
+                        <h2>Get more with extras</h2>
+                        <div class="divider"></div>
+                        <p>Our default packages can be upgraded with exclusive extras tailored for your party. Let us make your day unforgettable!</p>
+                    </div>
+
+                    <div class="extras-grid">
+                        <div class="extra-item" id="extra-dj-set" onclick="toggleExtra('DJ Set', 'extra-dj-set')">
+                            <div class="extra-icon"><i class="fa-solid fa-headphones"></i></div>
+                            <h4>DJ Set</h4>
+                            <p>After dinner DJ Set with your custom playlist. You choose, we play, you dance.</p>
+                        </div>
+                        
+                        <div class="extra-item" id="extra-roaming" onclick="toggleExtra('Roaming Acoustic Set', 'extra-roaming')">
+                            <div class="extra-icon"><i class="fa-solid fa-guitar"></i></div>
+                            <h4>Roaming Acoustic Set</h4>
+                            <p>It's not a performance, it's a whole other show. Acoustic instruments on the go, we play while roaming around the place.</p>
+                        </div>
+                        
+                        <div class="extra-item" id="extra-sax" onclick="toggleExtra('Sax on the beach', 'extra-sax')">
+                            <div class="extra-icon"><i class="fa-solid fa-rocket"></i></div>
+                            <h4>Sax on the beach</h4>
+                            <p>Let's be honest, a saxophone player makes everything better. Let us bring one and make your party super exclusive.</p>
+                        </div>
+                        
+                        <div class="extra-item" id="extra-station" onclick="toggleExtra('Extra Station', 'extra-station')">
+                            <div class="extra-icon"><i class="fa-solid fa-microphone"></i></div>
+                            <h4>Extra Station</h4>
+                            <p>A second station with its own sound system for speeches and toasts during dinner. Set up and run by us.</p>
+                        </div>
+                        
+                        <div class="extra-item" id="extra-more-lights" onclick="toggleExtra('More Lights!', 'extra-more-lights')">
+                            <div class="extra-icon"><i class="fa-solid fa-globe"></i></div>
+                            <h4>More Lights!</h4>
+                            <p>More lights, more fixtures, more, more, more!</p>
+                        </div>
+                    </div>
+
+                    <!-- Additional Details Textarea -->
+                    <div class="form-group" style="margin-top: 50px; max-width: 100%;">
+                        <label for="user_notes" style="font-size: 1.6rem; color: #fff; font-family: var(--font-heading); text-transform: none; margin-bottom: 10px; letter-spacing: normal;">Share your vision</label>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0; margin-bottom: 15px; font-weight: 300;">Any special requests, specific songs, or details we should know to make your day unforgettable? (Optional)</p>
+                        <textarea id="user_notes" placeholder="Tell us more about your event..."></textarea>
+                    </div>
+
+                </div>
+
+                <!-- Right Column: Sticky Summary -->
+                <div class="summary-panel">
+                    <h2>Your Event Summary</h2>
+                    <div id="dynamic-summary" class="summary-content">
+                        <div class="placeholder-text">
+                            Select a package to start building your event.
+                        </div>
+                    </div>
+                    
+                    <div class="summary-total">
+                        <!-- Salesforce ReCaptcha (UPDATED with new sitekey) -->
+                        <div class="g-recaptcha" data-sitekey="6LdShhAuAAAAAPZwOXdJl6lgqqyzyHxTjC-zcxOK"></div>
+                        <button type="submit" name="submit" class="btn-gold btn-solid">Submit Request</button>
+                    </div>
+                </div>
+
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Modal for Alerts & Success (Z-index must be higher than main modal) -->
+    <div id="customModal" class="modal-overlay" style="z-index: 1500;">
+        <div class="modal-box">
+            <i id="modalIcon" class="fa-solid fa-circle-exclamation" style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"></i>
+            <h3 id="modalTitle">Title</h3>
+            <p id="modalMessage">Message goes here.</p>
+            <button class="btn-gold" style="width: auto;" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Data Structures for dynamic rendering
+        const packagesData = {
+            'Unplugged Roaming': [
+                'Aperitivo Background Music',
+                'Dinner Background Music',
+                'After Dinner Live Show',
+                'After Show Background Music',
+                'Roaming Acoustic Set',
+                '1 Setlist Available',
+                'Standard Lights and FX Package (7 items)'
+            ],
+            'Standard': [
+                'Aperitivo Background Music',
+                'Dinner Background Music',
+                'After Dinner Live Show',
+                'After Show Background Music',
+                '1 Music Stage',
+                '1 Setlist Available',
+                'Standard Lights and FX Package (7 items)'
+            ],
+            'Plus': [
+                'Aperitivo Acoustic Show',
+                'Dinner Background Music',
+                'After Dinner Live Show',
+                'After Show Background Music',
+                '2 Music Stages',
+                '2 Setlists Available',
+                'Plus Lights and FX Package (19 items)'
+            ],
+            'Premium': [
+                'Aperitivo Acoustic Show',
+                'Dinner Background Music',
+                'After Dinner Live Show',
+                'DJ Set',
+                '2 Music Stages',
+                '3 Playlists Available',
+                'Premium Lights and FX Package (31 items)'
+            ]
+        };
+
+        const extrasIcons = {
+            'DJ Set': '<i class="fa-solid fa-headphones"></i>',
+            'Roaming Acoustic Set': '<i class="fa-solid fa-guitar"></i>',
+            'Sax on the beach': '<i class="fa-solid fa-rocket"></i>',
+            'Extra Station': '<i class="fa-solid fa-microphone"></i>',
+            'More Lights!': '<i class="fa-solid fa-globe"></i>'
+        };
+
+        // Application State
+        let state = {
+            package: null,
+            extras: []
+        };
+        
+        // Modal logic
+        function openConfigModal() {
+            document.getElementById('mainConfigModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeConfigModal() {
+            document.getElementById('mainConfigModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        // Navigation
+        function goToStep2() {
+            const form = document.getElementById('configForm');
+            if (form.reportValidity()) {
+                document.getElementById('step-1').style.display = 'none';
+                document.getElementById('step-2').style.display = 'grid';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Selection Logic
+        function selectPackage(pkgName) {
+            state.package = pkgName;
+            
+            // Update UI styling for cards
+            const cards = document.querySelectorAll('.package-card');
+            cards.forEach(card => {
+                if(card.querySelector('h3').innerText === pkgName) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+            
+            // Conditional interaction logic based on chosen package
+            const djSetItem = document.getElementById('extra-dj-set');
+            const moreLightsItem = document.getElementById('extra-more-lights');
+            const roamingItem = document.getElementById('extra-roaming');
+            
+            // First, reset all extra items to enabled state
+            [djSetItem, moreLightsItem, roamingItem].forEach(item => {
+                if(item) item.classList.remove('disabled');
+            });
+            
+            let extrasToDisable = [];
+
+            // Apply constraints based on the new package selection
+            if (pkgName === 'Premium') {
+                extrasToDisable = ['DJ Set', 'More Lights!'];
+                if (djSetItem) djSetItem.classList.add('disabled');
+                if (moreLightsItem) moreLightsItem.classList.add('disabled');
+            } else if (pkgName === 'Unplugged Roaming') {
+                extrasToDisable = ['Roaming Acoustic Set'];
+                if (roamingItem) roamingItem.classList.add('disabled');
+            }
+            
+            // If any previously selected extras are now disabled, deselect them automatically
+            extrasToDisable.forEach(extraToDisable => {
+                const index = state.extras.indexOf(extraToDisable);
+                if (index > -1) {
+                    state.extras.splice(index, 1);
+                    
+                    // Remove selection UI classes
+                    if (extraToDisable === 'DJ Set' && djSetItem) djSetItem.classList.remove('selected');
+                    if (extraToDisable === 'More Lights!' && moreLightsItem) moreLightsItem.classList.remove('selected');
+                    if (extraToDisable === 'Roaming Acoustic Set' && roamingItem) roamingItem.classList.remove('selected');
+                }
+            });
+            
+            updateSummary();
+        }
+
+        function toggleExtra(extraName, elementId) {
+            const targetItem = document.getElementById(elementId);
+            
+            // Prevent toggling if disabled
+            if (targetItem && targetItem.classList.contains('disabled')) {
+                return;
+            }
+            
+            const index = state.extras.indexOf(extraName);
+
+            if (index > -1) {
+                // Remove
+                state.extras.splice(index, 1);
+                if(targetItem) targetItem.classList.remove('selected');
+            } else {
+                // Add
+                state.extras.push(extraName);
+                if(targetItem) targetItem.classList.add('selected');
+            }
+
+            updateSummary();
+        }
+
+        // Dynamic Rendering
+        function updateSummary() {
+            const summaryContainer = document.getElementById('dynamic-summary');
+            
+            if (!state.package) {
+                summaryContainer.innerHTML = '<div class="placeholder-text">Select a package to start building your event.</div>';
+                return;
+            }
+
+            // Build Package Section
+            let html = `
+                <div class="summary-pkg-title">${state.package} Package</div>
+                <ul class="summary-list">
+            `;
+            
+            packagesData[state.package].forEach(feature => {
+                html += `<li>${feature}</li>`;
+            });
+            html += `</ul>`;
+
+            // Build Extras Section
+            if (state.extras.length > 0) {
+                html += `<div class="summary-extras-title">Included Extras</div>`;
+                state.extras.forEach(extra => {
+                    const iconHtml = extrasIcons[extra];
+                    html += `
+                        <div class="summary-extra-item">
+                            <span class="icon-wrapper">${iconHtml}</span>
+                            <span>${extra}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            summaryContainer.innerHTML = html;
+        }
+
+        // Salesforce Submission Validation
+        function validateAndPrepareSubmit() {
+            if (!state.package) {
+                showModal('Selection Required', 'Please select a base package before submitting your configuration.', false);
+                return false; // Prevent form submission
+            }
+            
+            // Optional: verify that reCAPTCHA has been checked locally (Salesforce also checks server-side)
+            var recaptchaResponse = document.getElementById("g-recaptcha-response");
+            if (recaptchaResponse && recaptchaResponse.value.trim() === "") {
+                showModal('Verification Required', 'Please complete the reCAPTCHA verification to proceed.', false);
+                return false; 
+            }
+
+            // Build the formatted description containing selections for Salesforce
+            let descText = "--- EVENT CONFIGURATION ---\n";
+            descText += "Package Selected: " + state.package + "\n";
+            
+            if (state.extras.length > 0) {
+                descText += "Extras Selected: \n - " + state.extras.join("\n - ") + "\n";
+            } else {
+                descText += "Extras Selected: None\n";
+            }
+
+            const userNotes = document.getElementById('user_notes').value.trim();
+            if (userNotes) {
+                descText += "\n--- ADDITIONAL NOTES ---\n" + userNotes + "\n";
+            }
+            
+            // Assign the computed string to the hidden description textarea
+            document.getElementById('description').value = descText;
+            
+            // Returning true allows the form to execute its POST action to Salesforce
+            return true;
+        }
+
+        // Custom Modal UI
+        function showModal(title, message, isSuccess) {
+            const modal = document.getElementById('customModal');
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMessage').innerText = message;
+            
+            const icon = document.getElementById('modalIcon');
+            if (isSuccess) {
+                icon.className = 'fa-solid fa-check-circle';
+            } else {
+                icon.className = 'fa-solid fa-circle-exclamation';
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
